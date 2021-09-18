@@ -17,6 +17,10 @@ async def _8ball(ctx, *, question):
     responses = ['要','不要']
     await ctx.send(f'問題: {question}\n回答: {random.choice(responses)}')
 
+@client.command()
+async def clear(ctx, amount=10):
+    await ctx.channel.purge(limit=amount)
+
 @client.event
 async def on_member_join(member):
     print(f'{member} 加入了伺服器')
