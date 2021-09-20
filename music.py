@@ -31,9 +31,9 @@ async def join(ctx):
         await voice.move_to(channel)
     else:
         voice = await channel.connect()
-        print(f'Miyuki加入到 {channel}\n')
+        print(f'Miyuki加入到 >> {channel} <<\n')
 
-    await ctx.send(f'Miyuki加入到 {channel}')
+    await ctx.send(f'Miyuki加入到 >> {channel} <<')
 
 
 @bot.command(pass_context=True, aliases=['l'])
@@ -43,11 +43,11 @@ async def leave(ctx):
 
     if voice and voice.is_connected():
         await voice.disconnect()
-        print(f'Miyuki離開了 {channel}')
-        await ctx.send(f'Miyuki離開了 {channel}')
+        print(f'Miyuki離開了 >> {channel} <<')
+        await ctx.send(f'Miyuki離開了 >> {channel} <<')
     else:
-        print('Miyuki離開了頻道')
-        await ctx.send('Miyuki離開了頻道')
+        print('Miyuki離開了')
+        await ctx.send(f'Miyuki離開了頻道')
 
 
 
