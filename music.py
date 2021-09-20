@@ -12,7 +12,7 @@ bot = commands.Bot(command_prefix=BOT_PREFIX)
 
 @bot.event
 async def on_ready():
-    print('Longged in as: ' + bot.user.name + '\n')
+    print('機器人已上線: ' + bot.user.name + '\n')
 
 @bot.command(pass_context=True, aliases=['j'])
 async def join(ctx):
