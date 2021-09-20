@@ -25,8 +25,6 @@ async def join(ctx):
     else:
         voice = await channel.connect()
 
-    await voice.disconnect()
-
     if voice and voice.is_connected():
         await voice.move_to(channel)
     else:
@@ -49,9 +47,47 @@ async def leave(ctx):
         print('Miyuki離開了')
         await ctx.send(f'Miyuki離開了頻道')
 
+@bot.command(pass_context=True, aliases=['p'])
+async def play(ctx, url: str):
+    song_there = os.path.isfile("song.mp3")
+    try:
+        if song_there:
+            os.remove("song.mp3")
+            print("Remove old song file")
+    except PermissionError:
+        print("Trying to delete song fils, but it's bing played")
+        await ctx.send("錯誤:音樂正在撥放")
+        return
+    await ctx.send(f"歌曲正在播放")
 
+    voice = get(bot.voice_clients, guild=ctx.guild)
 
+    ydl_opts = {
+        'format':'bestaudio/beat',
+        'postproprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '320',
+        }],
+    }
 
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        print("Downloading audio now\n")
+    ydl.download([url])
+
+    for file in os.listdir("./"):
+         if file.endswith(".mp3"):
+            name = file
+            print(f"Renamed File: {file}\n")
+            os.rename(file, "song.mp3")
+
+    voice.play(discord.FFmpegPCMAudio("song.mp3"), after=lambda e: print(f"{name} has finished playing"))
+    voice.source = discord.PCMVolumeTransformer(voice.source)
+    voice.source.volume = 0.07
+
+    nname = name.rsplit()
+    await ctx.send(f"正在播放: {nname}")
+    print('playing\n')
 
 
 bot.run(TOKEN)
