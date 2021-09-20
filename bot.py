@@ -22,12 +22,12 @@ async def _8ball(ctx, *, question):
     await ctx.send(f'問題: {question}\n回答: {random.choice(responses)}')
 
 @client.command()
-async def clear(ctx, amount=10):
+async def clear(ctx, amount=6):
     await ctx.channel.purge(limit=amount)
-    await ctx.send(f'已移除10則訊息!!')
+    await ctx.send(f'已移除5則訊息!!')
 
 @client.command()
 async def rn(ctx):
-    await ctx.send(f'我選擇的隨機號碼為: {random.randint(0,100)}')
+    await ctx.send(f'0~100中我選擇的隨機號碼為: {random.randint(0,100)}')
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
