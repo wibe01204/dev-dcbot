@@ -46,8 +46,8 @@ async def leave(ctx):
         print(f'Miyuki離開了 {channel}')
         await ctx.send(f'Miyuki離開了 {channel}')
     else:
-        print('Miyuki離開了頻道，因為頻道沒有成員')
-        await ctx.send('Miyuki離開了頻道，因為頻道沒有成員')
+        print('Miyuki離開了頻道')
+        await ctx.send('Miyuki離開了頻道')
 
 
 
