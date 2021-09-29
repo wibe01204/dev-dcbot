@@ -80,8 +80,7 @@ async def clear(ctx ,num:int):
 
 @clear.error
 async def ooxx_error(ctx, error):
-    await ctx.send(f'❌錯誤，請確認指令為:!aclear <要清除的行數>。')
-    
+    await ctx.send(f'❌錯誤，請確認指令為:!aclear <要清除的行數>。')  
 
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
