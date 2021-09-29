@@ -1,3 +1,4 @@
+from logging import error
 import discord
 import random
 from discord import message
@@ -19,13 +20,17 @@ async def ping(ctx):
 
 @client.command(aliases=['choose'])
 async def _8ball(ctx, *, question):
-    responses = ['要','不要']
+    responses = ['要','不要','不知道','我無法回答']
     await ctx.send(f'問題: {question}\n回答: {random.choice(responses)}')
 
-@client.command()
-async def clear(ctx, amount=6):
-    await ctx.channel.purge(limit=amount)
-    await ctx.send(f'已移除5則訊息!!')
+@client.command(aliases=['pick'])
+async def string(ctx, msg1, msg2, msg3):
+    選擇 = [msg1, msg2, msg3]
+    await ctx.send(f'🤔我選這個好了>>{random.choice(選擇)}')
+
+@string.error
+async def string_error(ctx, error):
+    await ctx.send(f'❌錯誤，請確認指令為:!apick <1> <2> <3>。')
 
 @client.command()
 async def rn(ctx):
@@ -48,7 +53,7 @@ async def join(ctx):
         voice = await channel.connect()
         print(f'Miyuki加入到 >> {channel} <<\n')
 
-    await ctx.sent(f'Miyuki加入到 >> {channel} <<')
+        await ctx.sent(f'Miyuki加入到 >> {channel} <<')
 
 @client.command(pass_context=True, aliases=['l'])
 async def leave(ctx):
@@ -62,6 +67,21 @@ async def leave(ctx):
     else:
         print('Miyuki離開了')
         await ctx.send(f'Miyuki離開了頻道')
+
+@client.command()
+async def sayd(ctx, *,msg):
+    await ctx.message.delete()
+    await ctx.send(msg)
+
+@client.command()
+async def clear(ctx ,num:int):
+    await ctx.channel.purge(limit=num+1)
+    await ctx.send(f'❌已刪除{num}則訊息!')
+
+@clear.error
+async def ooxx_error(ctx, error):
+    await ctx.send(f'❌錯誤，請確認指令為:!aclear <要清除的行數>。')
+    
 
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
