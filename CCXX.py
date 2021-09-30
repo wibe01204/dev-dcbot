@@ -126,7 +126,7 @@ async def ooxx_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("請標記兩個人來開始遊戲呦!")
     elif isinstance(error, commands.BadArgument):
-        await ctx.send("Please make sure to mention/ping players (ie. <@888251077026267176>).")
+        await ctx.send("請確定成員有標註成功! (ex. <@888251077026267176>).")
 
 @place.error
 async def place_error(ctx, error):
