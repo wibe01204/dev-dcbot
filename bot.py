@@ -12,11 +12,11 @@ client = commands.Bot(command_prefix='!a')
 
 @client.event
 async def on_ready():
-    print('機器人已上線')
+    print('BOT已上線')
 
 @client.command()
 async def ping(ctx):
-    await ctx.send(f'延遲 : {round(client.latency * 1000)}ms')
+    await ctx.send(f'總系統平均延遲 : {round(client.latency * 1000)}ms')
 
 @client.command(aliases=['choose'])
 async def _8ball(ctx, *, question):
@@ -59,6 +59,19 @@ async def join(ctx):
 async def leave(ctx):
     channel = ctx.message.author.voice.channel
     voice = get(client.voice_clients, guild=ctx.guild)
+
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
+    else:
+        voice = await channel.connect()
+
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
+    else:
+        voice = await channel.connect()
+        print(f'Miyuki加入到 >> {channel} <<\n')
+
+        await ctx.sent(f'Miyuki加入到 >> {channel} <<')
 
     if voice and voice.is_connected():
         await voice.disconnect()
