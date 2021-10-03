@@ -1,15 +1,18 @@
+from contextlib import ContextDecorator, contextmanager
 from logging import Manager, error
 from re import T, U
+from typing import ContextManager
 import discord
 import random
 from discord import message
 from discord import voice_client
 from discord import channel
 from discord import guild
+from discord.errors import ClientException
 from discord.ext import commands
 from discord.ext.commands import bot
 from discord.user import User
-from discord.utils import get
+from discord.utils import get, time_snowflake
 from discord.ext.commands import has_permissions, MissingPermissions
 
 client = commands.Bot(command_prefix='!a')
@@ -117,38 +120,40 @@ async def removerole(ctx, role: discord.Role, user: discord.Member):
 
 @removerole.error
 async def removerole_error(ctx, error):
-    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aremoverole [身分組] [成員]")
+    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aremoverole [身分組] [成員]")
 
 @client.command()
-async def ban(ctx, user: discord.User, reason):
+async def ban(ctx, user: discord.User, reason, GM):
     guild = ctx.guild
     原因 = reason
     mbed = discord.Embed(
-        title = '<BAN>',
-        description = f"{user} 因為 <{原因}> 被伺服器封鎖!!"
+        title = '<BAN🪓>',
+        description = f"名稱 : {user} ({user.id})\n 原因 : <{原因}>\n 處理人員 : {GM} "
     )
     if ctx.author.guild_permissions.ban_members:
+        await ctx.message.delete()
         await ctx.send(embed=mbed)
         await guild.ban(user=user)
 
 @ban.error
 async def ban(ctx, error):
-    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aban [成員] [原因]")
+    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aban [成員] [原因] [處理人員]")
 
 @client.command()
-async def unban(ctx, user: discord.User, reason):
+async def unban(ctx, user: discord.User, reason, GM):
     guild = ctx.guild
     原因 = reason
     mbed = discord.Embed(
-        title = '<UNBAN>',
-        description = f"{user} 因為 <{原因}> 被伺服器解除封鎖!!"
+        title = '<UNBAN🔁>',
+        description = f"名稱 : {user} ({user.id})\n 原因 : <{原因}>\n 處理人員 : {GM} "
     )
     if ctx.author.guild_permissions.ban_members:
+        await ctx.message.delete()
         await ctx.send(embed=mbed)
         await guild.unban(user=user)
 
 @unban.error
 async def unban(ctx, error):
-    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aunban [成員] [原因]")
+    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aunban [成員] [原因] [處理人員]")
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
