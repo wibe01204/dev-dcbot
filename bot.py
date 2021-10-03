@@ -1,12 +1,16 @@
-from logging import error
+from logging import Manager, error
+from re import T, U
 import discord
 import random
 from discord import message
 from discord import voice_client
 from discord import channel
+from discord import guild
 from discord.ext import commands
 from discord.ext.commands import bot
+from discord.user import User
 from discord.utils import get
+from discord.ext.commands import has_permissions, MissingPermissions
 
 client = commands.Bot(command_prefix='!a')
 
@@ -92,8 +96,59 @@ async def clear(ctx ,num:int):
     await ctx.send(f'❌已刪除{num}則訊息!')
 
 @clear.error
-async def ooxx_error(ctx, error):
+async def clear_error(ctx, error):
     await ctx.send(f'❌錯誤，請確認指令為:!aclear <要清除的行數>。')  
 
+@client.command()
+async def addrole(ctx, role: discord.Role, user: discord.Member):
+    if ctx.author.guild_permissions.administrator:
+        await user.add_roles(role)
+        await ctx.send(f"✅已將 {user.mention} 新增 {role.mention} 身分組!")
+
+@addrole.error
+async def addrole_error(ctx, error):
+    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aaddrole [身分組] [成員]")
+
+@client.command()
+async def removerole(ctx, role: discord.Role, user: discord.Member):
+    if ctx.author.guild_permissions.administrator:
+        await user.remove_roles(role)
+        await ctx.send(f"✅成功將 {user.mention} 從 {role.mention} 身分組中移除!")
+
+@removerole.error
+async def removerole_error(ctx, error):
+    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aremoverole [身分組] [成員]")
+
+@client.command()
+async def ban(ctx, user: discord.User, reason):
+    guild = ctx.guild
+    原因 = reason
+    mbed = discord.Embed(
+        title = '<BAN>',
+        description = f"{user} 因為 <{原因}> 被伺服器封鎖!!"
+    )
+    if ctx.author.guild_permissions.ban_members:
+        await ctx.send(embed=mbed)
+        await guild.ban(user=user)
+
+@ban.error
+async def ban(ctx, error):
+    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aban [成員] [原因]")
+
+@client.command()
+async def unban(ctx, user: discord.User, reason):
+    guild = ctx.guild
+    原因 = reason
+    mbed = discord.Embed(
+        title = '<UNBAN>',
+        description = f"{user} 因為 <{原因}> 被伺服器解除封鎖!!"
+    )
+    if ctx.author.guild_permissions.ban_members:
+        await ctx.send(embed=mbed)
+        await guild.unban(user=user)
+
+@unban.error
+async def unban(ctx, error):
+    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aunban [成員] [原因]")
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
