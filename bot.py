@@ -12,8 +12,8 @@ from discord.errors import ClientException
 from discord.ext import commands
 from discord.ext.commands import bot
 from discord.user import User
-from discord.utils import get, time_snowflake
 from discord.ext.commands import has_permissions, MissingPermissions
+from datetime import datetime, timedelta
 
 client = commands.Bot(command_prefix='!a')
 
