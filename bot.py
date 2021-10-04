@@ -104,9 +104,9 @@ async def clear_error(ctx, error):
 
 @client.command()
 async def addrole(ctx, role: discord.Role, user: discord.Member):
-    if ctx.author.guild_permissions.administrator:
+    if ctx.author.guild_permissions.manage_roles:
         await user.add_roles(role)
-        await ctx.send(f"✅已將 {user.mention} 新增 {role.mention} 身分組!")
+        await ctx.send(f"✅已將 {user.mention} 新增 `{role}` 身分組!")
 
 @addrole.error
 async def addrole_error(ctx, error):
@@ -114,9 +114,9 @@ async def addrole_error(ctx, error):
 
 @client.command()
 async def removerole(ctx, role: discord.Role, user: discord.Member):
-    if ctx.author.guild_permissions.administrator:
+    if ctx.author.guild_permissions.manage_roles:
         await user.remove_roles(role)
-        await ctx.send(f"✅成功將 {user.mention} 從 {role.mention} 身分組中移除!")
+        await ctx.send(f"✅成功將 {user.mention} 從 `{role}` 身分組中移除!")
 
 @removerole.error
 async def removerole_error(ctx, error):
