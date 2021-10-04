@@ -110,7 +110,7 @@ async def addrole(ctx, role: discord.Role, user: discord.Member):
 
 @addrole.error
 async def addrole_error(ctx, error):
-    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aaddrole [身分組] [成員]")
+    await ctx.send("❌錯誤:請確認有管理權限或是指令使用是否正確>!aaddrole [身分組] [成員]") 
 
 @client.command()
 async def removerole(ctx, role: discord.Role, user: discord.Member):
