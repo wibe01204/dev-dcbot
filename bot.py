@@ -129,12 +129,12 @@ async def removerole_error(ctx, error):
     await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aremoverole [身分組] [成員]")
 
 @client.command()
-async def ban(ctx, user: discord.User, reason, GM):
+async def ban(ctx, user: discord.User, reason):
     guild = ctx.guild
     原因 = reason
     mbed = discord.Embed(
-        title = '<BAN🪓>',
-        description = f"名稱 : {user} ({user.id})\n 原因 : <{原因}>\n 處理人員 : {GM} "
+        title = '<BAN🪓>', timestamp=ctx.message.created_at,
+        description = f"名稱 : {user} ({user.id})\n 原因 : <{原因}>\n 處理人員 : {ctx.author}"
     )
     if ctx.author.guild_permissions.ban_members:
         await ctx.message.delete()
@@ -143,15 +143,15 @@ async def ban(ctx, user: discord.User, reason, GM):
 
 @ban.error
 async def ban(ctx, error):
-    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aban [成員] [原因] [處理人員]")
+    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aban [成員] [原因]")
 
 @client.command()
-async def unban(ctx, user: discord.User, reason, GM):
+async def unban(ctx, user: discord.User, reason):
     guild = ctx.guild
     原因 = reason
     mbed = discord.Embed(
-        title = '<UNBAN🔁>',
-        description = f"名稱 : {user} ({user.id})\n 原因 : <{原因}>\n 處理人員 : {GM} "
+        title = '<UNBAN🔁>', timestamp=ctx.message.created_at,
+        description = f"名稱 : {user} ({user.id})\n 原因 : <{原因}>\n 處理w人員 : {ctx.author}"
     )
     if ctx.author.guild_permissions.ban_members:
         await ctx.message.delete()
@@ -160,7 +160,7 @@ async def unban(ctx, user: discord.User, reason, GM):
 
 @unban.error
 async def unban(ctx, error):
-    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aunban [成員] [原因] [處理人員]")
+    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aunban [成員] [原因]")
 
 @client.command()
 async def userinfo(ctx, member:discord.Member = None):
@@ -174,7 +174,7 @@ async def userinfo(ctx, member:discord.Member = None):
     embed.set_footer(text=f"Requested by {ctx.author}",icon_url=ctx.author.avatar_url)
 
     embed.add_field(name="ID:", value=member.id,inline=False)
-    embed.add_field(name="伺服器名稱", value=member.display_name,inline=False)
+    embed.add_field(name="伺服器內名稱:", value=member.display_name,inline=False)
 
     embed.add_field(name="創建於:", value=member.created_at.strftime("%a, %#d %B %Y, %I:%M %p "),inline=False)
     embed.add_field(name="加入伺服器於:", value=member.joined_at.strftime("%a, %#d %B %Y, %I:%M %p "),inline=False)
@@ -185,6 +185,10 @@ async def userinfo(ctx, member:discord.Member = None):
     embed.add_field(name="Bot?", value=member.bot, inline=False)
 
     await ctx.send(embed=embed)
+@userinfo.error
+async def userinfo(ctx, error):
+    await ctx.send("❌錯誤 : 找不到指定的用戶或指令錯誤!")
+
 
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
