@@ -1,6 +1,6 @@
 from contextlib import ContextDecorator, contextmanager
 from logging import Manager, error
-from re import T, U
+from re import M, T, U
 from typing import ContextManager
 import discord
 import random
@@ -8,6 +8,10 @@ from discord import message
 from discord import voice_client
 from discord import channel
 from discord import guild
+from discord import user
+from discord import embeds
+from discord import colour
+from discord import member
 from discord.errors import ClientException
 from discord.ext import commands
 from discord.ext.commands import bot
@@ -15,6 +19,7 @@ from discord.user import User
 from discord.ext.commands import has_permissions, MissingPermissions
 from datetime import datetime, timedelta
 from discord.utils import get
+datetime.now().timestamp()
 
 client = commands.Bot(command_prefix='!a')
 
@@ -156,5 +161,30 @@ async def unban(ctx, user: discord.User, reason, GM):
 @unban.error
 async def unban(ctx, error):
     await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aunban [成員] [原因] [處理人員]")
+
+@client.command()
+async def userinfo(ctx, member:discord.Member = None):
+    member = ctx.author if not member else member
+    roles = [role for role in member.roles]
+
+    embed = discord.Embed(colour=member.colour ,timestamp=ctx.message.created_at)
+
+    embed.set_author(name=f"個人資料 - {member}")
+    embed.set_thumbnail(url=member.avatar_url)
+    embed.set_footer(text=f"Requested by {ctx.author}",icon_url=ctx.author.avatar_url)
+
+    embed.add_field(name="ID:", value=member.id,inline=False)
+    embed.add_field(name="伺服器名稱", value=member.display_name,inline=False)
+
+    embed.add_field(name="創建於:", value=member.created_at.strftime("%a, %#d %B %Y, %I:%M %p "),inline=False)
+    embed.add_field(name="加入伺服器於:", value=member.joined_at.strftime("%a, %#d %B %Y, %I:%M %p "),inline=False)
+
+    embed.add_field(name=f"身分組 ({len(roles)})", value=" ".join([role.mention for role in roles]),inline=False)
+    embed.add_field(name=f"最高身分組:", value=member.top_role.mention,inline=False)
+
+    embed.add_field(name="Bot?", value=member.bot, inline=False)
+
+    await ctx.send(embed=embed)
+
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
