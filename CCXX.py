@@ -135,10 +135,10 @@ async def place_error(ctx, error):
     elif isinstance(error, commands.BadArgument):
         await ctx.send("你所選擇的地方有人選了")
 
-@client.command(aliases=['1nitro'])
-async def string(ctx, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11):
-    選擇 = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11]
-    await ctx.send(f'🎉恭喜中獎>>{random.choice(選擇)}')
+@client.command(aliases=['nitro'])
+async def string(ctx, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14):
+    選擇 = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14]
+    await ctx.send(f'🎉恭喜 **{random.choice(選擇)}** 中獎!!')
 
 client.run("ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0")
 
