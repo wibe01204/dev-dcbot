@@ -21,7 +21,8 @@ from datetime import datetime, timedelta
 from discord.utils import get
 datetime.now().timestamp()
 
-client = commands.Bot(command_prefix='!a')
+client = commands.Bot(command_prefix='!a',help_command=None)
+client.remove_command('help')
 
 @client.event
 async def on_ready():
@@ -189,6 +190,27 @@ async def userinfo(ctx, member:discord.Member = None):
 async def userinfo(ctx, error):
     await ctx.send("❌錯誤 : 找不到指定的用戶或指令錯誤!")
 
+@client.command(pass_context=True,aliases=['h'])
+async def help(ctx):
+    embed = discord.Embed(timestamp=ctx.message.created_at,
+        colour = discord.Colour.green()
+    )
+    embed.set_author(name='一般指令🔻')
+    embed.set_footer(text=f"Requested by {ctx.author}",icon_url=ctx.author.avatar_url)
+    embed.add_field(name='!aj', value='加入語音頻道', inline=True)
+    embed.add_field(name='!al', value='離開語音頻道', inline=True)
+    embed.add_field(name='!aooxx', value='玩OOXX', inline=True)
+    embed.add_field(name='!apick', value='三選一', inline=True)
+    embed.add_field(name='!aclear', value='清除訊息', inline=True)
+    embed.add_field(name='!auserinfo', value='群內成員資訊', inline=True)
+    embed.add_field(name='!ah', value='指令列表', inline=True)
+    embed.add_field(name='管理員指令🔻',value='(部分指令需有權限才可使用)',inline= False)
+    embed.add_field(name='!aban', value='封鎖用戶', inline=True)
+    embed.add_field(name='!aunban', value='解封用戶', inline=True)
+    embed.add_field(name='!aaddrole', value='新增身分組', inline=True)
+    embed.add_field(name='!aremoverole', value='移除身分組', inline=True)
+
+    await ctx.send(embed=embed)
 
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
