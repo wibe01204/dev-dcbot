@@ -1,6 +1,6 @@
 from contextlib import ContextDecorator, contextmanager
 from logging import Manager, error
-from re import M, T, U
+from re import L, M, T, U
 from typing import ContextManager
 import discord
 import random
@@ -113,7 +113,7 @@ async def clear_error(ctx, error):
 async def addrole(ctx, role: discord.Role, user: discord.Member):
     if ctx.author.guild_permissions.manage_roles:
         await user.add_roles(role)
-        await ctx.send(f"✅已將 {user.mention} 新增 `{role}` 身分組!")
+        await ctx.send(f"✅已將 `{user}` 新增 `{role}` 身分組!")
 
 @addrole.error
 async def addrole_error(ctx, error):
@@ -123,7 +123,7 @@ async def addrole_error(ctx, error):
 async def removerole(ctx, role: discord.Role, user: discord.Member):
     if ctx.author.guild_permissions.manage_roles:
         await user.remove_roles(role)
-        await ctx.send(f"✅成功將 {user.mention} 從 `{role}` 身分組中移除!")
+        await ctx.send(f"✅成功將 `{user}` 從 `{role}` 身分組中移除!")
 
 @removerole.error
 async def removerole_error(ctx, error):
@@ -211,6 +211,5 @@ async def help(ctx):
     embed.add_field(name='!aremoverole', value='移除身分組', inline=True)
 
     await ctx.send(embed=embed)
-
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
