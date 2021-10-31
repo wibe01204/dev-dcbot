@@ -69,31 +69,31 @@ async def join(ctx):
 
         await ctx.sent(f'Miyuki加入到 >> {channel} <<')
 
-@client.command(pass_context=True, aliases=['l'])
-async def leave(ctx):
-    channel = ctx.message.author.voice.channel
-    voice = get(client.voice_clients, guild=ctx.guild)
+##@client.command(pass_context=True, aliases=['l'])
+##async def leave(ctx):
+    ##channel = ctx.message.author.voice.channel
+    #voice = get(client.voice_clients, guild=ctx.guild)
 
-    if voice and voice.is_connected():
-        await voice.move_to(channel)
-    else:
-        voice = await channel.connect()
+    #if voice and voice.is_connected():
+        #await voice.move_to(channel)
+    #else:
+        #voice = await channel.connect()
 
-    if voice and voice.is_connected():
-        await voice.move_to(channel)
-    else:
-        voice = await channel.connect()
-        print(f'Miyuki加入到 >> {channel} <<\n')
+    #if voice and voice.is_connected():
+        #await voice.move_to(channel)
+    #else:
+        #voice = await channel.connect()
+        #print(f'Miyuki加入到 >> {channel} <<\n')
 
-        await ctx.sent(f'Miyuki加入到 >> {channel} <<')
+        #await ctx.sent(f'Miyuki加入到 >> {channel} <<')
 
-    if voice and voice.is_connected():
-        await voice.disconnect()
-        print(f'Miyuki離開了 >> {channel} <<')
-        await ctx.send(f'Miyuki離開了 >> {channel} <<')
-    else:
-        print('Miyuki離開了')
-        await ctx.send(f'Miyuki離開了頻道')
+    #if voice and voice.is_connected():
+        #await voice.disconnect()
+        #print(f'Miyuki離開了 >> {channel} <<')
+        #await ctx.send(f'Miyuki離開了 >> {channel} <<')
+    #else:
+        #print('Miyuki離開了')
+        #await ctx.send(f'Miyuki離開了頻道')
 
 @client.command()
 async def sayd(ctx, *,msg):
@@ -101,12 +101,12 @@ async def sayd(ctx, *,msg):
     await ctx.send(msg)
 
 @client.command()
-async def clear(ctx ,num:int):
+async def clean(ctx ,num:int):
     await ctx.channel.purge(limit=num+1)
     await ctx.send(f'❌已刪除{num}則訊息!')
 
-@clear.error
-async def clear_error(ctx, error):
+@clean.error
+async def clean_error(ctx, error):
     await ctx.send(f'❌錯誤，請確認指令為:!aclear <要清除的行數>。')  
 
 @client.command()
