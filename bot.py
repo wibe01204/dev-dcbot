@@ -21,6 +21,7 @@ from datetime import datetime, timedelta
 from discord.utils import get
 datetime.now().timestamp()
 
+
 client = commands.Bot(command_prefix='!a',help_command=None)
 client.remove_command('help')
 
@@ -211,5 +212,6 @@ async def help(ctx):
     embed.add_field(name='!aremoverole', value='移除身分組', inline=True)
 
     await ctx.send(embed=embed)
+
 
 client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
