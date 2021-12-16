@@ -20,7 +20,8 @@ from discord.ext.commands import has_permissions, MissingPermissions
 from datetime import datetime, timedelta
 from discord.utils import get
 datetime.now().timestamp()
-
+import asyncio
+import keep_alive
 
 client = commands.Bot(command_prefix='!a',help_command=None)
 client.remove_command('help')
@@ -131,38 +132,32 @@ async def removerole_error(ctx, error):
     await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aremoverole [身分組] [成員]")
 
 @client.command()
-async def ban(ctx, user: discord.User, reason):
-    guild = ctx.guild
-    原因 = reason
-    mbed = discord.Embed(
-        title = '<BAN🪓>', timestamp=ctx.message.created_at,
-        description = f"名稱 : {user} ({user.id})\n 原因 : <{原因}>\n 處理人員 : {ctx.author}"
-    )
-    if ctx.author.guild_permissions.ban_members:
-        await ctx.message.delete()
-        await ctx.send(embed=mbed)
-        await guild.ban(user=user)
+@commands.has_permissions(ban_members=True)
+async def ban(ctx, member: discord.Member, *, reason=None):
+    await member.ban(reason=reason)
+    await ctx.send(f"{member} 因為**{reason}**被封鎖了!")
 
 @ban.error
 async def ban(ctx, error):
     await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aban [成員] [原因]")
 
 @client.command()
-async def unban(ctx, user: discord.User, reason):
-    guild = ctx.guild
-    原因 = reason
-    mbed = discord.Embed(
-        title = '<UNBAN🔁>', timestamp=ctx.message.created_at,
-        description = f"名稱 : {user} ({user.id})\n 原因 : <{原因}>\n 處理w人員 : {ctx.author}"
-    )
-    if ctx.author.guild_permissions.ban_members:
-        await ctx.message.delete()
-        await ctx.send(embed=mbed)
-        await guild.unban(user=user)
+@commands.has_permissions(ban_members=True)
+async def unban(ctx, *, member):
+    bannedUsers = await ctx.guild.bans()
+    name, discriminator = member.split("#")
+
+    for ban in bannedUsers:
+        user = ban.user
+
+        if(user.name, user.discriminator) == (name, discriminator):
+            await ctx.guild.unban(user)
+            await ctx.send(f"{user.mention} 被伺服器解封!")
+            return
 
 @unban.error
 async def unban(ctx, error):
-    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aunban [成員] [原因]")
+    await ctx.send("❌錯誤 : 請確認有管理權限或是指令使用是否正確>!aunban [成員]")
 
 @client.command()
 async def userinfo(ctx, member:discord.Member = None):
@@ -198,9 +193,8 @@ async def help(ctx):
     )
     embed.set_author(name='一般指令🔻')
     embed.set_footer(text=f"Requested by {ctx.author}",icon_url=ctx.author.avatar_url)
-    embed.add_field(name='!aj', value='加入語音頻道', inline=True)
-    embed.add_field(name='!al', value='離開語音頻道', inline=True)
     embed.add_field(name='!aooxx', value='玩OOXX', inline=True)
+    embed.add_field(name='!aplace', value='OOXX放置',inline=True)
     embed.add_field(name='!apick', value='三選一', inline=True)
     embed.add_field(name='!aclear', value='清除訊息', inline=True)
     embed.add_field(name='!auserinfo', value='群內成員資訊', inline=True)
@@ -210,8 +204,43 @@ async def help(ctx):
     embed.add_field(name='!aunban', value='解封用戶', inline=True)
     embed.add_field(name='!aaddrole', value='新增身分組', inline=True)
     embed.add_field(name='!aremoverole', value='移除身分組', inline=True)
+    embed.add_field(name='!akick', value='踢出成員', inline=True)
+    embed.add_field(name='!amute' ,value='將成員靜音' ,inline=True)
+    embed.add_field(name='!aunmute' ,value='將成員解除靜音' ,inline=True)
 
     await ctx.send(embed=embed)
 
+@client.command()
+@commands.has_permissions(kick_members=True)
+async def kick(ctx, member: discord.Member, *, reason=None):
+    await member.kick(reason=reason)
+    await ctx.send(f"{member} 因為 {reason}被踢出伺服器!")
 
-client.run('ODg4MjUxMDc3MDI2MjY3MTc2.YUP-Rw.2X53VO2HtucTgPf-1nOw4JnavU0')
+@client.command(description="Mutes the specified user.")
+@commands.has_permissions(manage_messages=True)
+async def mute(ctx, member: discord.Member, *, reason=None):
+    guild = ctx.guild
+    mutedRole = discord.utils.get(guild.roles, name="Muted")
+
+    if not mutedRole:
+        mutedRole = await guild.create_role(name="Muted")
+
+        for channel in guild.channels:
+            await channel.set_permissions(mutedRole, speak=False, send_messages=False, read_message_history=True, read_messages=False)
+
+    await member.add_roles(mutedRole, reason=reason)
+    await ctx.send(f"**{member}** 因為 **{reason}** 被伺服器管理員靜音!")
+    await member.send(f"你已被 **{guild.name}**靜音! 原因: **{reason}**")
+
+@client.command(description="Unmutes a specified user.")
+@commands.has_permissions(manage_messages=True)
+async def unmute(ctx, member: discord.Member):
+    mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
+
+    await member.remove_roles(mutedRole)
+    await ctx.send(f"伺服器管理員已解除 **{member}** 的靜音!")
+    await member.send(f"**{ctx.guild.name}** 已解除你的靜音!")
+
+keep_alive.keep_alive()
+
+client.run('')
